@@ -343,27 +343,25 @@ export default function POSSystem() {
 
   if (!isLoggedIn) {
     return (
-      <div className="flex h-screen bg-gray-900 items-center justify-center font-sans">
-        <div className="bg-white p-8 rounded-3xl shadow-2xl w-96 text-center animate-in zoom-in duration-300">
-          <div className={`w-20 h-20 bg-${PRIMARY_COLOR}-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white shadow-lg shadow-${PRIMARY_COLOR}-200`}>
+      <div className="flex h-screen bg-gray-900 items-center justify-center font-sans px-4">
+        <div className="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm text-center">
+          <div className={`w-20 h-20 bg-${PRIMARY_COLOR}-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white shadow-lg`}>
             <Lock size={40} />
           </div>
           <h1 className="text-2xl font-bold text-gray-800 mb-2">{SHOP_NAME}</h1>
-          <p className="text-gray-500 mb-8 text-sm">กรุณาใส่รหัสพนักงานเพื่อเข้าใช้งาน</p>
-          <div className="mb-8">
-            <div className="flex justify-center gap-4 mb-4">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className={`w-4 h-4 rounded-full transition-all duration-200 ${i < pinInput.length ? `bg-${PRIMARY_COLOR}-600 scale-110` : 'bg-gray-200'}`}></div>
-              ))}
-            </div>
+          <p className="text-gray-500 mb-8 text-sm">กรุณาใส่รหัสพนักงาน</p>
+          <div className="mb-8 flex justify-center gap-4">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className={`w-4 h-4 rounded-full transition-all duration-200 ${i < pinInput.length ? `bg-${PRIMARY_COLOR}-600 scale-110` : 'bg-gray-200'}`}></div>
+            ))}
           </div>
           <div className="grid grid-cols-3 gap-4 mb-6">
             {[1,2,3,4,5,6,7,8,9].map(n => (
               <button key={n} onClick={() => handleLogin(n.toString())} className="h-16 rounded-xl bg-gray-50 text-xl font-bold text-gray-700 hover:bg-gray-100 active:scale-95 transition shadow-sm border border-gray-100">{n}</button>
             ))}
-            <button onClick={() => handleLogin('clear')} className="h-16 rounded-xl bg-red-50 text-red-500 font-bold hover:bg-red-100 active:scale-95 transition flex items-center justify-center"><X /></button>
-            <button onClick={() => handleLogin('0')} className="h-16 rounded-xl bg-gray-50 text-xl font-bold text-gray-700 hover:bg-gray-100 active:scale-95 transition shadow-sm border border-gray-100">0</button>
-            <button onClick={() => handleLogin('enter')} className={`h-16 rounded-xl bg-${PRIMARY_COLOR}-600 text-white font-bold hover:bg-${PRIMARY_COLOR}-700 active:scale-95 transition flex items-center justify-center shadow-lg shadow-${PRIMARY_COLOR}-200`}>เข้า</button>
+            <button onClick={() => handleLogin('clear')} className="h-16 rounded-xl bg-red-50 text-red-500 font-bold hover:bg-red-100"><X /></button>
+            <button onClick={() => handleLogin('0')} className="h-16 rounded-xl bg-gray-50 text-xl font-bold text-gray-700 hover:bg-gray-100 border border-gray-100">0</button>
+            <button onClick={() => handleLogin('enter')} className={`h-16 rounded-xl bg-${PRIMARY_COLOR}-600 text-white font-bold hover:bg-${PRIMARY_COLOR}-700`}>เข้า</button>
           </div>
           <p className="text-xs text-gray-400">Default PIN: {ADMIN_PIN}</p>
         </div>
