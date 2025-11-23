@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-// ✅ บรรทัดนี้ถูกต้องแล้วครับ แต่ต้องผ่านการสั่ง npm install @supabase/supabase-js ก่อน
 import { createClient } from '@supabase/supabase-js'; 
 
 import { 
@@ -22,7 +21,7 @@ const SHOP_PROMPTPAY_ID = '0812345678';
 // --- ⚠️ Supabase Config ---
 const SUPABASE_URL = 'https://xvrhvrzsnwqorxokcauc.supabase.co';
 // 🔴 อย่าลืมเอา Key ยาวๆ (ที่ขึ้นต้นด้วย ey...) มาใส่ตรงนี้นะครับ ห้ามมีภาษาไทยปน
-const SUPABASE_KEY = 'sb_publishable_HvCq3JH2wpVXtgEk38ikhg_uwvO5ae5'; 
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cmh2cnpzbndxb3J4b2tjYXVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3NjYyNTUsImV4cCI6MjA3OTM0MjI1NX0.N2Q6R4-8tmd2n0n02wBvxYTDr32sisH28FKNiwSEyi8'; 
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -47,13 +46,14 @@ export default function POSSystem() {
 
   // --- App State ---
   const [activeTab, setActiveTab] = useState('pos');
-  const [products, setProducts] = useState<any[]>([]);
-  const [members, setMembers] = useState<any[]>([]);
-  const [orders, setOrders] = useState<any[]>([]); 
+  // ✅ แก้ไขแล้ว: ลบ <any[]> ออกให้หมด เหลือแค่ []
+  const [products, setProducts] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [orders, setOrders] = useState([]); 
   const [loading, setLoading] = useState(false);
   
   // --- Cart & Transaction State ---
-  const [cart, setCart] = useState<any[]>([]);
+  const [cart, setCart] = useState([]);
   const [selectedMember, setSelectedMember] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -65,7 +65,7 @@ export default function POSSystem() {
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [newProduct, setNewProduct] = useState({ name: '', price: 0, category: 'Coffee', stock: 10, color: 'bg-gray-100' });
   
-  // --- Member Management State (NEW) ---
+  // --- Member Management State ---
   const [showMemberModal, setShowMemberModal] = useState(false);
   const [memberForm, setMemberForm] = useState({ id: null, name: '', phone: '' });
   const [isEditingMember, setIsEditingMember] = useState(false);
@@ -80,12 +80,10 @@ export default function POSSystem() {
       const { data: mData, error: mError } = await supabase.from('members').select('*').order('id');
       if (!mError && mData) {
         setMembers(mData);
-        // ถ้ายังไม่ได้เลือกสมาชิก หรือสมาชิกที่เลือกถูกลบไป ให้กลับมาเลือก Guest
         if (!selectedMember || !mData.find(m => m.id === selectedMember.id)) {
             const guest = mData.find(m => m.id === 1) || mData[0];
             setSelectedMember(guest);
         } else {
-            // อัปเดตแต้มสมาชิกที่เลือกอยู่ให้เป็นปัจจุบัน
             const current = mData.find(m => m.id === selectedMember.id);
             if (current) setSelectedMember(current);
         }
@@ -145,10 +143,9 @@ export default function POSSystem() {
   const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   const netTotal = totalAmount * 1.07;
 
-  // --- Logic: Payment & Print (UPDATED) ---
+  // --- Logic: Payment & Print ---
   const printReceipt = (transaction) => {
     const receiptWindow = window.open('', 'Print Receipt', 'height=600,width=400');
-    // สร้างใบเสร็จแบบสวยงาม (HTML+CSS)
     const receiptContent = `
       <html>
         <head>
@@ -216,7 +213,6 @@ export default function POSSystem() {
           </div>
           <script>
             window.print();
-            // window.close(); // Uncomment ถ้าอยากให้ปิดอัตโนมัติ
           </script>
         </body>
       </html>
@@ -272,7 +268,7 @@ export default function POSSystem() {
     }
   };
 
-  // --- Logic: Add/Edit Member (UPDATED) ---
+  // --- Logic: Add/Edit Member ---
   const openAddMember = () => {
     setMemberForm({ id: null, name: '', phone: '' });
     setIsEditingMember(false);
@@ -317,7 +313,6 @@ export default function POSSystem() {
     try {
         const { error } = await supabase.from('members').delete().eq('id', id);
         if (error) throw error;
-        // ถ้าลบคนที่เลือกอยู่ ให้กลับไปเลือก Guest
         if (selectedMember?.id === id) setSelectedMember(members.find(m => m.id === 1) || null);
         fetchData();
     } catch (err) {
@@ -498,7 +493,6 @@ export default function POSSystem() {
     </div>
   );
 
-  // --- Members View (UPDATED with Edit/Delete) ---
   const MembersView = () => (
     <div className="p-8 h-full overflow-y-auto bg-gray-50">
       <div className="flex justify-between items-center mb-6">
@@ -514,7 +508,6 @@ export default function POSSystem() {
               <p className="text-gray-500 text-sm">{m.phone}</p>
               <span className="inline-block bg-yellow-100 text-yellow-700 text-xs px-2 py-0.5 rounded mt-1">⭐ {m.points} แต้ม</span>
             </div>
-            {/* ปุ่มแก้ไข/ลบ (จะแสดงเมื่อเอาเมาส์ไปวาง หรือแตะ) */}
             {m.id !== 1 && (
               <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button onClick={() => openEditMember(m)} className="text-gray-400 hover:text-blue-500 p-1 bg-gray-50 rounded-md"><Edit size={16}/></button>
@@ -594,7 +587,7 @@ export default function POSSystem() {
           </div>
         )}
 
-        {/* Member Modal (UPDATED for Add/Edit) */}
+        {/* Member Modal */}
         {showMemberModal && (
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl shadow-2xl p-6 w-96 animate-in zoom-in">
