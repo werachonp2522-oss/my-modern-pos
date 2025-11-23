@@ -20,9 +20,9 @@ const ADMIN_PIN = "123456";
 const SHOP_PROMPTPAY_ID = '0812345678'; 
 
 // --- ⚠️ Supabase Config ---
-const SUPABASE_URL = 'https://xvrhvrzsnwqorxokcauc.supabase.co';
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 // 🔴 อย่าลืมเอา Key ยาวๆ (ที่ขึ้นต้นด้วย ey...) มาใส่ตรงนี้นะครับ ห้ามมีภาษาไทยปน
-const SUPABASE_KEY = 'sb_publishable_HvCq3JH2wpVXtgEk38ikhg_uwvO5ae5'; 
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_KEY; 
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -47,13 +47,13 @@ export default function POSSystem() {
 
   // --- App State ---
   const [activeTab, setActiveTab] = useState('pos');
-  const [products, setProducts] = useState([]);
-  const [members, setMembers] = useState([]);
-  const [orders, setOrders] = useState([]); 
+  const [products, setProducts] = useState<any[]>([]);
+  const [members, setMembers] = useState<any[]>([]);
+  const [orders, setOrders] = useState<any[]>([]); 
   const [loading, setLoading] = useState(false);
   
   // --- Cart & Transaction State ---
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState<any[]>([]);
   const [selectedMember, setSelectedMember] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
