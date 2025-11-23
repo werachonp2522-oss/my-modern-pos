@@ -20,9 +20,9 @@ const ADMIN_PIN = "123456";
 const SHOP_PROMPTPAY_ID = '0812345678'; 
 
 // --- ⚠️ Supabase Config ---
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_URL = 'https://xvrhvrzsnwqorxokcauc.supabase.co';
 // 🔴 อย่าลืมเอา Key ยาวๆ (ที่ขึ้นต้นด้วย ey...) มาใส่ตรงนี้นะครับ ห้ามมีภาษาไทยปน
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_KEY; 
+const SUPABASE_KEY = 'sb_publishable_HvCq3JH2wpVXtgEk38ikhg_uwvO5ae5'; 
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
