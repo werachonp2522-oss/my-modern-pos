@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+// ✅ ใช้การเชื่อมต่อแบบมาตรฐาน (รองรับ Vercel 100%)
 import { createClient } from '@supabase/supabase-js'; 
 
 import { 
@@ -20,19 +21,19 @@ const SHOP_PROMPTPAY_ID = '0812345678';
 
 // --- ⚠️ Supabase Config ---
 const SUPABASE_URL = 'https://xvrhvrzsnwqorxokcauc.supabase.co';
-// ✅ Key ของคุณ (ตรวจสอบให้แน่ใจว่าเป็น Key ที่ถูกต้องและไม่มีภาษาไทยปน)
+// ✅ Key ของคุณ
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cmh2cnpzbndxb3J4b2tjYXVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3NjYyNTUsImV4cCI6MjA3OTM0MjI1NX0.N2Q6R4-8tmd2n0n02wBvxYTDr32sisH28FKNiwSEyi8';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const CATEGORIES = [
-  { id: 'All', label: 'ทั้งหมด', icon: <LayoutGrid size={16}/> },
-  { id: 'Coffee', label: 'กาแฟ', icon: <Coffee size={16}/> },
-  { id: 'Tea', label: 'ชา', icon: <CupSoda size={16}/> },
-  { id: 'Bakery', label: 'เบเกอรี่', icon: <Utensils size={16}/> },
-  { id: 'Cocoa', label: 'โกโก้', icon: <CupSoda size={16}/> },
-  { id: 'Drink', label: 'เครื่องดื่ม', icon: <CupSoda size={16}/> },
-  { id: 'Food', label: 'อาหาร', icon: <Utensils size={16}/> },
+  { id: 'All', label: 'ทั้งหมด', icon: <LayoutGrid size={14}/> },
+  { id: 'Coffee', label: 'กาแฟ', icon: <Coffee size={14}/> },
+  { id: 'Tea', label: 'ชา', icon: <CupSoda size={14}/> },
+  { id: 'Bakery', label: 'เบเกอรี่', icon: <Utensils size={14}/> },
+  { id: 'Cocoa', label: 'โกโก้', icon: <CupSoda size={14}/> },
+  { id: 'Drink', label: 'เครื่องดื่ม', icon: <CupSoda size={14}/> },
+  { id: 'Food', label: 'อาหาร', icon: <Utensils size={14}/> },
 ];
 
 const MOCK_MEMBERS = [
@@ -40,7 +41,7 @@ const MOCK_MEMBERS = [
 ];
 
 export default function POSSystem() {
-  // --- 1. HOOKS (ประกาศตัวแปรทั้งหมดไว้บนสุด ห้ามมีเงื่อนไขคั่น) ---
+  // --- 1. HOOKS ---
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [pinInput, setPinInput] = useState('');
   const [activeTab, setActiveTab] = useState('pos');
@@ -102,14 +103,6 @@ export default function POSSystem() {
         lowStock: products.filter(p => p.stock < 10).length
     };
   }, [orders, products]);
-
-  const chartData = useMemo(() => {
-    return orders.slice(0, 7).reverse().map(o => ({
-      id: o.id,
-      total: o.total,
-      time: new Date(o.created_at).toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})
-    }));
-  }, [orders]);
 
   const filteredProducts = useMemo(() => {
     return products.filter(p => {
@@ -245,37 +238,37 @@ export default function POSSystem() {
     )
   }
 
-  // --- Views ---
+  // --- Views (Mobile Optimized - Compact) ---
   const POSView = () => (
     <div className="flex h-full flex-col md:flex-row overflow-hidden pb-20 md:pb-0">
       <div className="flex-1 flex flex-col min-w-0 bg-gray-50/50">
         <header className="h-14 md:h-16 bg-white border-b px-4 flex items-center justify-between shrink-0 z-10">
-          <h1 className={`text-base md:text-lg font-bold text-gray-800 flex items-center gap-2`}><Coffee className={`text-${PRIMARY_COLOR}-600`} size={20}/> <span className="hidden sm:inline">{SHOP_NAME}</span></h1>
+          <h1 className={`text-base md:text-lg font-bold text-gray-800 flex items-center gap-2`}><Coffee className={`text-${PRIMARY_COLOR}-600`} size={18}/> <span className="hidden sm:inline">{SHOP_NAME}</span></h1>
           <div className="relative w-40 md:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="ค้นหา..." className={`w-full pl-9 pr-3 py-1.5 bg-gray-100 border-transparent focus:bg-white focus:ring-2 focus:ring-${PRIMARY_COLOR}-500 rounded-full transition-all outline-none text-sm`} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="ค้นหา..." className={`w-full pl-8 pr-3 py-1.5 bg-gray-100 border-transparent focus:bg-white focus:ring-2 focus:ring-${PRIMARY_COLOR}-500 rounded-full transition-all outline-none text-xs`} />
           </div>
         </header>
         <div className="px-3 py-2 bg-white border-b flex gap-2 overflow-x-auto scrollbar-hide shrink-0">
           {CATEGORIES.map(cat => (
-            <button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs md:text-sm font-medium whitespace-nowrap transition-all ${selectedCategory === cat.id ? `bg-${PRIMARY_COLOR}-600 text-white shadow-md` : 'bg-gray-100 text-gray-600'}`}>
+            <button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] md:text-sm font-medium whitespace-nowrap transition-all ${selectedCategory === cat.id ? `bg-${PRIMARY_COLOR}-600 text-white shadow-md` : 'bg-gray-100 text-gray-600'}`}>
               {cat.icon}{cat.label}
             </button>
           ))}
         </div>
-        {/* Product Grid (ปรับให้แน่นขึ้นสำหรับมือถือ) */}
-        <div className="p-3 md:p-6 flex-1 overflow-y-auto pb-32 md:pb-6">
+        {/* Product Grid (Super Compact for Mobile) */}
+        <div className="p-2 md:p-6 flex-1 overflow-y-auto pb-32 md:pb-6">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4">
             {filteredProducts.map(p => (
-              <button key={p.id} onClick={() => addToCart(p)} disabled={p.stock <= 0} className={`relative bg-white p-2 md:p-3 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-between h-36 md:h-48 transition-all active:scale-95 ${p.stock <= 0 ? 'opacity-60 grayscale' : ''}`}>
-                <div className={`w-12 h-12 md:w-20 md:h-20 rounded-full ${p.color || 'bg-gray-100'} flex items-center justify-center mb-1 text-gray-500`}>
-                   {p.image_url ? <img src={p.image_url} className="w-full h-full object-cover rounded-full" /> : <Coffee size={24}/>}
+              <button key={p.id} onClick={() => addToCart(p)} disabled={p.stock <= 0} className={`relative bg-white p-2 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-between h-28 md:h-48 transition-all active:scale-95 ${p.stock <= 0 ? 'opacity-60 grayscale' : ''}`}>
+                <div className={`w-8 h-8 md:w-20 md:h-20 rounded-full ${p.color || 'bg-gray-100'} flex items-center justify-center mb-1 text-gray-500`}>
+                   {p.image_url ? <img src={p.image_url} className="w-full h-full object-cover rounded-full" /> : <Coffee size={16}/>}
                 </div>
                 <div className="text-center w-full">
-                  <h3 className="font-bold text-gray-800 text-xs md:text-sm leading-tight mb-1 line-clamp-2 h-8">{p.name}</h3>
+                  <h3 className="font-bold text-gray-800 text-[10px] md:text-sm leading-tight mb-0.5 line-clamp-2">{p.name}</h3>
                   <p className={`text-${PRIMARY_COLOR}-600 font-extrabold text-xs md:text-sm`}>฿{p.price}</p>
                 </div>
-                <div className={`absolute top-1 right-1 text-[9px] md:text-[10px] px-1.5 py-0.5 rounded-full font-bold ${p.stock === 0 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                <div className={`absolute top-1 right-1 text-[8px] md:text-[10px] px-1 py-0.5 rounded-full font-bold ${p.stock === 0 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
                   {p.stock}
                 </div>
               </button>
@@ -284,7 +277,7 @@ export default function POSSystem() {
         </div>
       </div>
       
-      {/* Cart Sidebar (PC Only) */}
+      {/* Cart Sidebar (PC) */}
       <aside className="hidden md:flex w-96 bg-white border-l flex-col shadow-2xl z-20 h-full">
         <CartSidebarContent selectedMember={selectedMember} members={members} setSelectedMember={setSelectedMember} cart={cart} updateQty={updateQty} removeFromCart={removeFromCart} netTotal={netTotal} setShowPaymentModal={setShowPaymentModal} />
       </aside>
@@ -315,7 +308,7 @@ export default function POSSystem() {
       </div>
       <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
         <table className="w-full text-left text-xs md:text-sm">
-          <thead className="bg-gray-100 text-gray-600"><tr><th className="p-3">ชื่อ</th><th className="p-3 text-right">ราคา</th><th className="p-3 text-center">คงเหลือ</th><th className="p-3"></th></tr></thead>
+          <thead className="bg-gray-100 text-gray-600"><tr><th className="p-3">ชื่อ</th><th className="p-3 text-right">ราคา</th><th className="p-3 text-center">เหลือ</th><th className="p-3"></th></tr></thead>
           <tbody className="divide-y divide-gray-100">
             {products.map(p => (
               <tr key={p.id}><td className="p-3">{p.name}</td><td className="p-3 text-right">฿{p.price}</td><td className="p-3 text-center">{p.stock}</td><td className="p-3 text-center"><button onClick={() => handleDeleteProduct(p.id)} className="text-red-500"><Trash2 size={14}/></button></td></tr>
@@ -371,8 +364,8 @@ export default function POSSystem() {
         <div className={`w-12 h-12 bg-gradient-to-br from-${PRIMARY_COLOR}-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg`}>{SHOP_NAME.charAt(0)}</div>
         <nav className="flex-1 w-full flex flex-col items-center space-y-6">
           <NavButton icon={<ShoppingCart />} label="ขาย" active={activeTab === 'pos'} onClick={() => setActiveTab('pos')} />
-          <NavButton icon={<LayoutGrid />} label="สรุป" active={activeTab === 'dashboard'} onClick={() => {setActiveTab('dashboard'); fetchData();}} />
           <NavButton icon={<Package />} label="สต็อก" active={activeTab === 'stock'} onClick={() => {setActiveTab('stock'); fetchData();}} />
+          <NavButton icon={<LayoutGrid />} label="สรุป" active={activeTab === 'dashboard'} onClick={() => {setActiveTab('dashboard'); fetchData();}} />
           <NavButton icon={<Users />} label="สมาชิก" active={activeTab === 'members'} onClick={() => {setActiveTab('members'); fetchData();}} />
         </nav>
         <button onClick={() => setIsLoggedIn(false)} className="p-3 text-gray-500 hover:text-red-400 transition mt-auto"><LogOut size={24} /></button>
@@ -381,8 +374,8 @@ export default function POSSystem() {
       {/* Mobile Bottom Nav */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-2 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] pb-safe">
         <NavButtonMobile icon={<ShoppingCart />} label="ขาย" active={activeTab === 'pos'} onClick={() => setActiveTab('pos')} />
-        <NavButtonMobile icon={<LayoutGrid />} label="สรุป" active={activeTab === 'dashboard'} onClick={() => {setActiveTab('dashboard'); fetchData();}} />
         <NavButtonMobile icon={<Package />} label="สต็อก" active={activeTab === 'stock'} onClick={() => {setActiveTab('stock'); fetchData();}} />
+        <NavButtonMobile icon={<LayoutGrid />} label="สรุป" active={activeTab === 'dashboard'} onClick={() => {setActiveTab('dashboard'); fetchData();}} />
         <NavButtonMobile icon={<Users />} label="สมาชิก" active={activeTab === 'members'} onClick={() => {setActiveTab('members'); fetchData();}} />
       </div>
 
@@ -392,7 +385,7 @@ export default function POSSystem() {
         {activeTab === 'dashboard' && <DashboardView />}
         {activeTab === 'members' && <MembersView />}
       
-        {/* Payment Modal */}
+        {/* Modals */}
         {showPaymentModal && (
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in zoom-in duration-200">
             <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-md">
@@ -415,7 +408,7 @@ export default function POSSystem() {
           </div>
         )}
 
-        {/* Product/Member Modals (Reuse previous logic) */}
+        {/* Product/Member Modals */}
         {showAddProduct && (
           <div className="absolute inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
@@ -448,7 +441,6 @@ export default function POSSystem() {
   );
 }
 
-// Helper Components
 const CartSidebarContent = ({ selectedMember, members, setSelectedMember, cart, updateQty, removeFromCart, netTotal, setShowPaymentModal }) => (
     <>
         <div className={`p-4 border-b bg-${PRIMARY_COLOR}-50/50`}>
