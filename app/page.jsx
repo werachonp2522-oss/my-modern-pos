@@ -8,7 +8,7 @@ import {
   LayoutGrid, ShoppingCart, Package, Users, Settings, LogOut,
   Search, Plus, Minus, Trash2, CreditCard, Coffee, CupSoda,
   Utensils, X, CheckCircle, BarChart3, DollarSign, TrendingUp,
-  QrCode, History, AlertCircle, Loader2, RefreshCw, Lock, UserPlus, Edit, Save, Printer
+  QrCode, History, AlertCircle, Loader2, RefreshCw, Lock, UserPlus, Edit, Save, Printer, ArrowRight
 } from 'lucide-react';
 
 // --- ⚙️ การตั้งค่าร้านค้า ---
@@ -55,6 +55,7 @@ export default function POSSystem() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showCartModal, setShowCartModal] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [loadingPayment, setLoadingPayment] = useState(false);
 
@@ -287,7 +288,7 @@ export default function POSSystem() {
       {/* Mobile Cart Drawer */}
       {cart.length > 0 && (
         <div className="md:hidden fixed bottom-16 left-0 right-0 bg-white border-t rounded-t-2xl shadow-[0_-5px_20px_rgba(0,0,0,0.15)] z-30 animate-in slide-in-from-bottom duration-300">
-          <div className="p-3 flex justify-between items-center" onClick={() => setShowPaymentModal(true)}>
+          <div className="p-3 flex justify-between items-center" onClick={() => setShowCartModal(true)}>
             <div className="flex items-center gap-3">
               <div className={`bg-${PRIMARY_COLOR}-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold`}>{cart.reduce((acc, item) => acc + item.qty, 0)}</div>
               <div className="flex flex-col">
@@ -295,7 +296,7 @@ export default function POSSystem() {
                 <span className={`text-lg font-extrabold text-${PRIMARY_COLOR}-600`}>฿{netTotal.toFixed(2)}</span>
               </div>
             </div>
-            <button className={`bg-${PRIMARY_COLOR}-600 text-white px-6 py-2 rounded-xl text-sm font-bold shadow-md`} onClick={(e) => { e.stopPropagation(); setShowPaymentModal(true); }}>ชำระเงิน</button>
+            <button className={`bg-${PRIMARY_COLOR}-600 text-white px-6 py-2 rounded-xl text-sm font-bold shadow-md`} onClick={(e) => { e.stopPropagation(); setShowCartModal(true); }}>ดูตะกร้า</button>
           </div>
         </div>
       )}
@@ -364,7 +365,7 @@ export default function POSSystem() {
   );
 
   return (
-    <div className="flex h-screen bg-gray-100 font-sans text-slate-700 overflow-hidden">
+    <div className="flex h-screen md:h-screen h-[100dvh] bg-gray-100 font-sans text-slate-700 overflow-hidden">
       {/* Sidebar */}
       <aside className="hidden md:flex w-24 bg-slate-900 text-white flex-col items-center py-6 space-y-8 shadow-xl z-30 shrink-0">
         <div className={`w-12 h-12 bg-gradient-to-br from-${PRIMARY_COLOR}-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg`}>{SHOP_NAME.charAt(0)}</div>
@@ -392,6 +393,46 @@ export default function POSSystem() {
         {activeTab === 'members' && <MembersView />}
 
         {/* Modals */}
+        {showCartModal && (
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex flex-col justify-end md:justify-center md:items-center animate-in slide-in-from-bottom md:slide-in-from-center duration-300">
+            <div className="bg-white w-full md:w-[400px] md:rounded-3xl rounded-t-3xl shadow-2xl flex flex-col max-h-[90vh]">
+              <div className="p-4 border-b flex items-center justify-between shrink-0">
+                <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2"><ShoppingCart className={`text-${PRIMARY_COLOR}-600`} /> ตะกร้าสินค้า</h2>
+                <button onClick={() => setShowCartModal(false)} className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><X size={18} /></button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                {cart.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-40 text-gray-400"><ShoppingCart size={40} className="mb-2 opacity-50" /><p>ไม่มีสินค้า</p></div>
+                ) : (
+                  cart.map(item => (
+                    <div key={item.id} className="flex items-center gap-3 p-3 bg-white border rounded-xl shadow-sm">
+                      <div className="flex flex-col items-center gap-1">
+                        <button onClick={() => updateQty(item.id, 1)} className="w-7 h-7 rounded-lg bg-green-50 text-green-600 flex items-center justify-center border border-green-100"><Plus size={14} /></button>
+                        <span className="text-sm font-bold text-gray-800 w-6 text-center">{item.qty}</span>
+                        <button onClick={() => updateQty(item.id, -1)} className="w-7 h-7 rounded-lg bg-red-50 text-red-600 flex items-center justify-center border border-red-100"><Minus size={14} /></button>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-bold text-sm text-gray-800 truncate">{item.name}</h4>
+                        <p className={`text-xs text-${PRIMARY_COLOR}-600 font-bold`}>฿{item.price * item.qty}</p>
+                      </div>
+                      <button onClick={() => removeFromCart(item.id)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={18} /></button>
+                    </div>
+                  ))
+                )}
+              </div>
+              <div className="p-4 border-t bg-gray-50 shrink-0 pb-safe">
+                <div className="flex justify-between items-end mb-4">
+                  <span className="text-gray-500 text-sm">ยอดสุทธิ</span>
+                  <span className={`text-2xl font-extrabold text-${PRIMARY_COLOR}-600`}>฿{netTotal.toFixed(2)}</span>
+                </div>
+                <button onClick={() => { setShowCartModal(false); setShowPaymentModal(true); }} disabled={cart.length === 0} className={`w-full py-3.5 rounded-xl font-bold text-white shadow-lg flex items-center justify-center gap-2 ${cart.length > 0 ? `bg-${PRIMARY_COLOR}-600` : 'bg-gray-300'}`}>
+                  ชำระเงิน <ArrowRight size={18} />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {showPaymentModal && (
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in zoom-in duration-200">
             <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-md">
