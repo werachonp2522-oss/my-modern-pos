@@ -246,12 +246,12 @@ export default function POSSystem() {
       <div className="flex-1 flex flex-col min-w-0 bg-gray-50/50">
         <header className="h-14 md:h-16 bg-white border-b px-4 flex items-center justify-between shrink-0 z-10">
           <h1 className={`text-base md:text-lg font-bold text-gray-800 flex items-center gap-2`}><Coffee className={`text-${PRIMARY_COLOR}-600`} size={20} /> <span className="hidden sm:inline">{SHOP_NAME}</span></h1>
-          <div className="relative w-40 md:w-64">
+          <div className="relative flex-1 max-w-xs md:max-w-md mx-2">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
             <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="ค้นหา..." className={`w-full pl-9 pr-3 py-1.5 bg-gray-100 border-transparent focus:bg-white focus:ring-2 focus:ring-${PRIMARY_COLOR}-500 rounded-full transition-all outline-none text-xs`} />
           </div>
         </header>
-        <div className="px-3 py-2 bg-white border-b flex gap-2 overflow-x-auto scrollbar-hide shrink-0">
+        <div className="px-3 py-2 bg-white border-b flex gap-2 overflow-x-auto scrollbar-hide shrink-0 pr-12">
           {CATEGORIES.map(cat => (
             <button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] md:text-sm font-medium whitespace-nowrap transition-all ${selectedCategory === cat.id ? `bg-${PRIMARY_COLOR}-600 text-white shadow-md` : 'bg-gray-100 text-gray-600'}`}>
               {cat.icon}{cat.label}
