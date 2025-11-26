@@ -394,39 +394,49 @@ export default function POSSystem() {
 
         {/* Modals */}
         {showCartModal && (
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex flex-col justify-end md:justify-center md:items-center animate-in slide-in-from-bottom md:slide-in-from-center duration-300">
-            <div className="bg-white w-full md:w-[400px] md:rounded-3xl rounded-t-3xl shadow-2xl flex flex-col max-h-[90vh]">
-              <div className="p-4 border-b flex items-center justify-between shrink-0">
+          <div className="fixed inset-0 bg-white z-50 flex flex-col animate-in slide-in-from-bottom duration-300 md:absolute md:inset-0 md:bg-black/60 md:backdrop-blur-sm md:flex-col md:justify-center md:items-center md:animate-in md:fade-in md:zoom-in">
+            <div className="bg-white w-full h-full md:h-auto md:w-[400px] md:rounded-3xl shadow-2xl flex flex-col md:max-h-[90vh]">
+              <div className="p-4 border-b flex items-center justify-between shrink-0 bg-white">
                 <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2"><ShoppingCart className={`text-${PRIMARY_COLOR}-600`} /> ตะกร้าสินค้า</h2>
-                <button onClick={() => setShowCartModal(false)} className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><X size={18} /></button>
+                <button onClick={() => setShowCartModal(false)} className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors"><X size={24} /></button>
               </div>
-              <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
                 {cart.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-40 text-gray-400"><ShoppingCart size={40} className="mb-2 opacity-50" /><p>ไม่มีสินค้า</p></div>
+                  <div className="flex flex-col items-center justify-center h-64 text-gray-400"><ShoppingCart size={64} className="mb-4 opacity-30" /><p className="text-lg">ไม่มีสินค้าในตะกร้า</p></div>
                 ) : (
                   cart.map(item => (
-                    <div key={item.id} className="flex items-center gap-3 p-3 bg-white border rounded-xl shadow-sm">
-                      <div className="flex flex-col items-center gap-1">
-                        <button onClick={() => updateQty(item.id, 1)} className="w-7 h-7 rounded-lg bg-green-50 text-green-600 flex items-center justify-center border border-green-100"><Plus size={14} /></button>
-                        <span className="text-sm font-bold text-gray-800 w-6 text-center">{item.qty}</span>
-                        <button onClick={() => updateQty(item.id, -1)} className="w-7 h-7 rounded-lg bg-red-50 text-red-600 flex items-center justify-center border border-red-100"><Minus size={14} /></button>
+                    <div key={item.id} className="grid grid-cols-[auto_1fr_auto] gap-4 p-4 bg-white border rounded-2xl shadow-sm items-center">
+                      {/* Qty Controls */}
+                      <div className="flex flex-col items-center gap-2 bg-gray-50 p-1 rounded-xl">
+                        <button onClick={() => updateQty(item.id, 1)} className="w-8 h-8 rounded-lg bg-white text-green-600 flex items-center justify-center shadow-sm border border-gray-100 active:scale-90 transition-transform"><Plus size={16} /></button>
+                        <span className="text-base font-bold text-gray-800 w-6 text-center">{item.qty}</span>
+                        <button onClick={() => updateQty(item.id, -1)} className="w-8 h-8 rounded-lg bg-white text-red-600 flex items-center justify-center shadow-sm border border-gray-100 active:scale-90 transition-transform"><Minus size={16} /></button>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-bold text-sm text-gray-800 truncate">{item.name}</h4>
-                        <p className={`text-xs text-${PRIMARY_COLOR}-600 font-bold`}>฿{item.price * item.qty}</p>
+
+                      {/* Info */}
+                      <div className="min-w-0">
+                        <h4 className="font-bold text-base text-gray-800 leading-tight mb-1">{item.name}</h4>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-gray-400">@{item.price}</span>
+                          <span className={`text-lg font-extrabold text-${PRIMARY_COLOR}-600`}>฿{item.price * item.qty}</span>
+                        </div>
                       </div>
-                      <button onClick={() => removeFromCart(item.id)} className="p-2 text-gray-400 hover:text-red-500"><Trash2 size={18} /></button>
+
+                      {/* Delete Button */}
+                      <button onClick={() => removeFromCart(item.id)} className="w-12 h-12 rounded-xl bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-100 hover:text-red-600 transition-colors active:scale-90">
+                        <Trash2 size={24} />
+                      </button>
                     </div>
                   ))
                 )}
               </div>
-              <div className="p-4 border-t bg-gray-50 shrink-0 pb-safe">
+              <div className="p-4 border-t bg-white shrink-0 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
                 <div className="flex justify-between items-end mb-4">
-                  <span className="text-gray-500 text-sm">ยอดสุทธิ</span>
-                  <span className={`text-2xl font-extrabold text-${PRIMARY_COLOR}-600`}>฿{netTotal.toFixed(2)}</span>
+                  <span className="text-gray-500 text-base">ยอดสุทธิ</span>
+                  <span className={`text-3xl font-extrabold text-${PRIMARY_COLOR}-600`}>฿{netTotal.toFixed(2)}</span>
                 </div>
-                <button onClick={() => { setShowCartModal(false); setShowPaymentModal(true); }} disabled={cart.length === 0} className={`w-full py-3.5 rounded-xl font-bold text-white shadow-lg flex items-center justify-center gap-2 ${cart.length > 0 ? `bg-${PRIMARY_COLOR}-600` : 'bg-gray-300'}`}>
-                  ชำระเงิน <ArrowRight size={18} />
+                <button onClick={() => { setShowCartModal(false); setShowPaymentModal(true); }} disabled={cart.length === 0} className={`w-full py-4 rounded-xl font-bold text-xl text-white shadow-xl flex items-center justify-center gap-2 active:scale-95 transition-transform ${cart.length > 0 ? `bg-${PRIMARY_COLOR}-600` : 'bg-gray-300'}`}>
+                  ชำระเงิน <ArrowRight size={24} />
                 </button>
               </div>
             </div>
