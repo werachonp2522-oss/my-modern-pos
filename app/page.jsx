@@ -263,9 +263,9 @@ export default function POSSystem() {
           {/* Mobile: List view, Desktop: Grid view */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4">
             {filteredProducts.map(p => (
-              <button key={p.id} onClick={() => addToCart(p)} disabled={p.stock <= 0} className={`relative bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex flex-row md:flex-col items-center gap-4 md:gap-0 md:justify-between h-auto md:h-48 transition-all active:scale-95 ${p.stock <= 0 ? 'opacity-60 grayscale' : ''}`}>
-                <div className={`w-16 h-16 md:w-20 md:h-20 rounded-lg md:rounded-full ${p.color || 'bg-gray-100'} flex items-center justify-center md:mb-1 text-gray-500 shrink-0`}>
-                  {p.image_url ? <img src={p.image_url} className="w-full h-full object-cover rounded-lg md:rounded-full" /> : <Coffee size={28} />}
+              <button key={p.id} onClick={() => addToCart(p)} disabled={p.stock <= 0} className={`relative bg-white p-2 md:p-3 rounded-xl shadow-sm border border-gray-100 flex flex-row md:flex-col items-center gap-3 md:gap-0 md:justify-between h-auto md:h-48 transition-all active:scale-95 ${p.stock <= 0 ? 'opacity-60 grayscale' : ''}`}>
+                <div className={`w-12 h-12 md:w-20 md:h-20 rounded-lg md:rounded-full ${p.color || 'bg-gray-100'} flex items-center justify-center md:mb-1 text-gray-500 shrink-0`}>
+                  {p.image_url ? <img src={p.image_url} className="w-full h-full object-cover rounded-lg md:rounded-full" /> : <Coffee className="w-6 h-6 md:w-8 md:h-8" />}
                 </div>
                 <div className="text-left md:text-center w-full flex-1">
                   <h3 className="font-bold text-gray-800 text-sm leading-tight mb-1 line-clamp-2">{p.name}</h3>
