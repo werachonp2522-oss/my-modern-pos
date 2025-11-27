@@ -444,7 +444,7 @@ export default function POSSystem() {
         )}
 
         {showPaymentModal && (
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in zoom-in duration-200">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in zoom-in duration-200">
             <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-md">
               <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold text-gray-800">ชำระเงิน</h2>
